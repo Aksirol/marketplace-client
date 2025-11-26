@@ -3,17 +3,17 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { registerUser, FormState } from './actions';
+// 👇 ВИПРАВЛЕНО: імпортуємо registerUser замість loginUser
+import { registerUser, FormState } from './actions'; 
 import Link from 'next/link';
 
-// Кнопка, що показує статус "pending"
 function SubmitButton() {
     const { pending } = useFormStatus();
     return (
         <button
             type="submit"
             disabled={pending}
-            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+            className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all"
         >
             {pending ? 'Створення акаунту...' : 'Зареєструватися'}
         </button>
@@ -22,63 +22,68 @@ function SubmitButton() {
 
 export default function RegisterPage() {
     const initialState: FormState = { success: false, message: '' };
-    const [state, formAction] = useActionState(registerUser, initialState);
+    // 👇 ВИПРАВЛЕНО: тут теж використовуємо registerUser
+    const [state, formAction] = useActionState(registerUser, initialState); 
 
     return (
-        <div className="container mx-auto p-8 max-w-md">
-            <h1 className="text-3xl font-bold mb-6 text-center">Створити акаунт</h1>
-
-            <form action={formAction} className="bg-white p-6 border rounded-lg shadow-sm">
-
-                <div className="mb-4">
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
+        <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md space-y-8">
+                <div className="text-center">
+                    <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900">
+                        Створити акаунт
+                    </h1>
                 </div>
 
-                <div className="mb-6">
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                        Пароль (мін. 6 символів)
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        minLength={6}
-                        required
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                </div>
+                <form action={formAction} className="mt-8 space-y-6 bg-white p-8 shadow-xl rounded-2xl border border-slate-100">
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                                Email
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    required
+                                    className="block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all"
+                                />
+                            </div>
+                        </div>
 
-                <SubmitButton />
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                                Пароль (мін. 6 символів)
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    minLength={6}
+                                    required
+                                    className="block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-                {/* Повідомлення про помилку */}
-                {!state.success && state.message && (
-                    <p className="mt-4 text-sm text-red-600">
-                        {state.message}
-                    </p>
-                )}
-            </form>
+                    {!state.success && state.message && (
+                        <div className="rounded-md bg-red-50 p-4 border border-red-100">
+                            <p className="text-sm text-red-700">{state.message}</p>
+                        </div>
+                    )}
 
-            <p className="text-center mt-4">
-                Вже маєте акаунт?{' '}
-                <Link href="/login" className="text-blue-600 hover:underline">
-                    Увійти
-                </Link>
-            </p>
+                    <SubmitButton />
+                </form>
+
+                <p className="text-center text-sm text-slate-600">
+                    Вже маєте акаунт?{' '}
+                    <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        Увійти
+                    </Link>
+                </p>
+            </div>
         </div>
     );
 }
